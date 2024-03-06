@@ -22,5 +22,5 @@ urlpatterns = [
     path('',include("top.urls")), #ブラウザからの要求が第一引数の文字列と一致した時、include先を参照する
     # path('accounts/', include("accounts.urls")),
     # path('diary/', include("diary.urls")),
-    # path('game/', include("game.urls")),
+    path('game/', include("game.urls")),
 ]

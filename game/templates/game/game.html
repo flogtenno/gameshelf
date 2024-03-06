@@ -1,0 +1,32 @@
+{% extends "top/layout.html" %}
+{% load static %}
+{% comment %} タイトルブロック部 {% endcomment %}
+{% block title %}Game{% endblock %}
+
+{% comment %} ヘッダーブロック部 {% endcomment %}
+{% block header %}
+{% endblock %}
+
+{% comment %} コンテンツブロック部 {% endcomment %}
+{% block content %}
+<h1>{{ displaygame.game_title }}</h1>
+
+<p>{{ displaygame.game_content }}</p>
+
+{% if displaygame.game_image %}
+<img src="{{ MEDIA_URL }}{{ displaygame.game_image.url }}" alt="{{ displaygame.game_title }}">
+{% else %}
+    <p> image not found </p>
+{% endif %}
+
+<ul class="tags-container">
+    {% for tag in displaygame.game_tag.all %}
+        <li class="tag-item">{{ tag }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% comment %} フッターブロック部 {% endcomment %}
+{% block footer %}
+{% endblock %}

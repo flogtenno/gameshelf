@@ -10,6 +10,9 @@ class Game(models.Model):
     game_content = models.TextField()
     game_image = models.ImageField(upload_to="media/", blank=True, null=True)
 
+    def __str__(self):
+        return self.game_title
+
 class GameComment(models.Model):
     game_comment_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     game_comment_game = models.ForeignKey(Game, on_delete=models.CASCADE)
