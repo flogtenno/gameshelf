@@ -1,0 +1,16 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" 
+    href="{% static 'css/a.css' %}"/>
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+        <h2>logined: "{{login_user}}"</h2>
+        <img src="{% static image1 %}">
+        <img src="../../../static/gameshelf.jpg">
+</body>
+</html>

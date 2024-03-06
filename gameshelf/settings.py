@@ -119,7 +119,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+import os
 STATIC_URL = 'static/'
+STATICFILES_DIRS = os.path.join(BASE_DIR, "static"),
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -128,9 +131,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ここから追記～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 
-import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL = '/medias/'
+MEDIA_URL = '/media/'
 # メディアファイルの保存先
 
-AUTH_USER_MODEL="accounts.CustomUser"
+AUTH_USER_MODEL="accounts.CustomUser" #ユーザー設定の格納場所
