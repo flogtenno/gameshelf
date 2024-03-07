@@ -1,0 +1,25 @@
+{% extends "top/layout.html" %}
+{% load static %}
+{% comment %} タイトルブロック部 {% endcomment %}
+{% block title %}NewGame{% endblock %}
+
+{% comment %} ヘッダーブロック部 {% endcomment %}
+{% block header %}
+{% endblock %}
+
+{% comment %} コンテンツブロック部 {% endcomment %}
+{% block content %}
+
+<h1>NewGame!</h1>
+
+<form action="{% url 'newgame' %}" method="post" class="mt-3" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ createform.as_p }}
+    <button class="btn btn-primary">NewGame Created</button>
+</form>
+
+{% endblock %}
+
+{% comment %} フッターブロック部 {% endcomment %}
+{% block footer %}
+{% endblock %}

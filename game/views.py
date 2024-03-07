@@ -1,21 +1,21 @@
 from django.shortcuts import render,redirect
 from .models import Game,GameComment
-from .form import GameCommentForm
+from .form import GameCommentForm,GameCreateForm
 
 def game(request, game_id):
 
     if request.method == 'POST':
         form = GameCommentForm(request.POST)
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.game_comment_user = request.user
-            comment.game_comment_game_id = game_id
+            comment = form.save(commit=False) #フォームの関連付けをしてから保存は一旦待つ
+            comment.game_comment_user = request.user #コメントはだれが行ったかを保存
+            comment.game_comment_game_id = game_id #コメントの際にはフォームに"{% url 'game' displaygame.id %}"の記載がある。game_idが本ページのIDとして利用可能
             comment.save()
-            return redirect('game', game_id=game_id)
+            return redirect('game', game_id=game_id) #path('<int:game_id>', views.game,name="game"),
 
-    game    = Game.objects.get(pk=game_id) # Game オブジェクトを取得
-    comment = GameComment.objects.filter(game_comment_game=game)
-    form    = GameCommentForm()
+    game    = Game.objects.get(pk=game_id) # Game オブジェクトを取得、gameIDを主キーとしてGET
+    comment = GameComment.objects.filter(game_comment_game=game) #game_comment_game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    form    = GameCommentForm() #コメント入力用フォーム
 
     params = {
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
@@ -25,6 +25,23 @@ def game(request, game_id):
     }
 
     return render(request, 'game/game.html', params)
+
+def newgame(request):
+    if request.method == 'POST':
+        form = GameCreateForm(request.POST, request.FILES) #request.FILESが無いとファイルの登録不可、注意
+        if form.is_valid():
+            game = form.save()
+            return redirect('game', game_id=game.id) #game = form.save()でgameに丸々保存内容が入っている、game.idを指定して新規作成したページへ飛べる
+
+    form    = GameCreateForm()
+    params = {
+        "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
+        "createform"    :   form,
+    }
+
+    return render(request, 'game/newgame.html', params)
+
+
 
 """
 comment.game_comment_game に game オブジェクトを直接代入する場合、game オブジェクトがまだデータベースに保存されていない可能性があります。

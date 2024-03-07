@@ -36,12 +36,12 @@
 <hr>
 <p>コメント一覧</p>
 {% for comment in displaycomment %}
-<hr>
-<p>{{comment.game_comment_user}}
-    : {{comment.game_comment_comment}}</p>
+    <hr>
+    <p>{{ comment.game_comment_comment }}</p>
+    <div style="text-align: right;">
+        <p>{{comment.game_comment_user}}</p>
+    </div>
 {% endfor %}
-
-
 
 {% endblock %}
 
