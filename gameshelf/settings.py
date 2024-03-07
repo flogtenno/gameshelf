@@ -131,8 +131,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ここから追記～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 
+# メディアファイルの保存先
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
-# メディアファイルの保存先
 
-AUTH_USER_MODEL="accounts.CustomUser" #ユーザー設定の格納場所
+#ユーザー設定の格納場所の変更
+AUTH_USER_MODEL="accounts.CustomUser"

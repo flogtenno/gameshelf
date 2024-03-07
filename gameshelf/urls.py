@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include #includeを追加し、外部参照できるようにする
 
+# 追加
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include("top.urls")), #ブラウザからの要求が第一引数の文字列と一致した時、include先を参照する
@@ -24,3 +28,7 @@ urlpatterns = [
     # path('diary/', include("diary.urls")),
     path('game/', include("game.urls")),
 ]
+
+# メディアファイル公開のために必要
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
