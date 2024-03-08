@@ -33,15 +33,26 @@ def newgame(request):
             game = form.save()
             return redirect('game', game_id=game.id) #game = form.save()でgameに丸々保存内容が入っている、game.idを指定して新規作成したページへ飛べる
 
-    form    = GameCreateForm()
     params = {
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
-        "createform"    :   form,
+        "createform"    :   GameCreateForm(),
     }
 
     return render(request, 'game/newgame.html', params)
 
-
+def editgame(request, game_id):
+    editgame = Game.objects.get(pk=game_id)
+    if request.method == 'POST':
+        form = GameCreateForm(request.POST, request.FILES, instance=editgame) #request.FILESが無いとファイルの登録不可、注意
+        if form.is_valid():
+            game = form.save()
+            return redirect('game', game_id=game.id)
+    params = {
+        "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
+        "editgame"      :   editgame,
+        "editform"      :   GameCreateForm(instance=editgame)
+    }
+    return render(request, "game/editgame.html", params)
 
 """
 comment.game_comment_game に game オブジェクトを直接代入する場合、game オブジェクトがまだデータベースに保存されていない可能性があります。

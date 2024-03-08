@@ -1,7 +1,7 @@
 {% extends "top/layout.html" %}
 {% load static %}
 {% comment %} タイトルブロック部 {% endcomment %}
-{% block title %}Game{% endblock %}
+{% block title %}[GameShelf]{{ displaygame.game_title }}{% endblock %}
 
 {% comment %} ヘッダーブロック部 {% endcomment %}
 {% block header %}
@@ -24,6 +24,14 @@
 {% if displaygame.game_image %}
     <img src="{{ MEDIA_URL }}{{ displaygame.game_image.url }}" alt="{{ displaygame.game_title }}">
 {% endif %}
+
+<form action="{% url 'editgame' displaygame.id %}" method="post" class="mt-3">
+    {% csrf_token %}
+    <div style="text-align: right;">
+    <button class="btn btn-primary">ゲーム詳細編集</button>
+    </div>
+</form>
+
 <hr>
 
 <form action="{% url 'game' displaygame.id %}" method="post" class="mt-3">
