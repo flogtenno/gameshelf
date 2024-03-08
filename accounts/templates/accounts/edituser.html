@@ -1,0 +1,25 @@
+{% extends "top/layout.html" %}
+{% load static %}
+{% comment %} タイトルブロック部 {% endcomment %}
+{% block title %}[GameShelf]{{ editgame.game_title }}{% endblock %}
+
+{% comment %} ヘッダーブロック部 {% endcomment %}
+{% block header %}
+{% endblock %}
+
+{% comment %} コンテンツブロック部 {% endcomment %}
+{% block content %}
+
+<h1>Fix Userinfo</h1>
+
+<form action="{% url 'edituser' edituser.id %}" method="post" class="mt-3" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ editform.as_p }}
+    <button class="btn btn-primary">Fix Userinfo</button>
+</form>
+
+{% endblock %}
+
+{% comment %} フッターブロック部 {% endcomment %}
+{% block footer %}
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Game,GameComment
-from .form import GameCommentForm,GameCreateForm
+from .forms import GameCommentForm,GameCreateForm
 
 def game(request, game_id):
 
