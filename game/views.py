@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
 from .models import Game,GameComment
 from .forms import GameCommentForm,GameCreateForm
+from django.contrib import messages #メッセージの送信完了をおしらせ
+
 
 def game(request, game_id):
 
@@ -31,6 +33,7 @@ def newgame(request):
         form = GameCreateForm(request.POST, request.FILES) #request.FILESが無いとファイルの登録不可、注意
         if form.is_valid():
             game = form.save()
+            messages.success(request, "作成しました")
             return redirect('game', game_id=game.id) #game = form.save()でgameに丸々保存内容が入っている、game.idを指定して新規作成したページへ飛べる
 
     params = {
@@ -46,6 +49,7 @@ def editgame(request, game_id):
         form = GameCreateForm(request.POST, request.FILES, instance=editgame) #request.FILESが無いとファイルの登録不可、注意
         if form.is_valid():
             game = form.save()
+            messages.success(request, "編集しました")
             return redirect('game', game_id=game.id)
     params = {
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
