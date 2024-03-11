@@ -12,7 +12,7 @@
 {% block content %}
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
-    {{ createform.as_p }}
+    {{ loginform.as_p }}
     <button type="submit">ログイン</button>
 </form>
 {% endblock %}

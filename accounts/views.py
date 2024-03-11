@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib import messages #メッセージの送信完了をおしらせ
 from .models import CustomUser
 from .forms import CustomUserCreationForm,LoginForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout as auth_logout
 
 # ユーザーページ～～～～～～～～～～～～～～～～～～～
 def userpage(request):
@@ -62,6 +62,12 @@ def userlogin(request):
             return redirect(to='/accounts/login')  # 登録失敗時のリダイレクト先
     else:
         params={
-            "createform" : LoginForm()
+            "loginform" : LoginForm()
         }
     return render(request, 'accounts/login.html', params)
+
+# ログアウト～～～～～～～～～～～～～～～～～～～～～～～～～
+def userlogout(request):
+    auth_logout(request) #ログアウト処理
+    messages.info(request, "ログアウトしました")
+    return redirect('/')

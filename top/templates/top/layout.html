@@ -53,12 +53,16 @@
     </ul>
     {% comment %} 右詰めボタン {% endcomment %}
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item nav-link fw-bold text-primary">
-            <span class="font-weight-bold">
-                <a href="/admin/logout?next=/">[logout]</a>
-            </span>
-        </li>
-    </ul>
+    <li class="nav-item nav-link fw-bold text-primary">
+        <span class="font-weight-bold">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}?next={% url 'top' %}">[logout]</a>
+            {% else %}
+                <a href="{% url 'login' %}">[login]</a>
+            {% endif %}
+        </span>
+    </li>
+</ul>
 </nav>
 
 {% comment %} メッセージがviews.pyから飛んできていた際の処理 {% endcomment %}
