@@ -3,13 +3,45 @@ from django.contrib import messages #メッセージの送信完了をおしら�
 from .models import CustomUser
 from .forms import CustomUserCreationForm,LoginForm,CustomUserEditForm
 from django.contrib.auth import authenticate, login, logout as auth_logout
+from django.core.paginator import Paginator
+from diary.models import Diary,DiaryComment
+from game.models import Game,GameComment
 
 # ユーザーページ～～～～～～～～～～～～～～～～～～～
 def userpage(request):
     if request.user.is_authenticated: # ユーザーが認証されている場合の処理
         print(f"***ユーザーページアクセス*****User：{request.user}******")
+        # ユーザー作成記事の格納
+        user_diary_all = Diary.objects.filter(diary_user=request.user) #ユーザー作成記事の情報を送付
+        paginator = Paginator(user_diary_all, 3) #3つで区切る
+        page_number = request.GET.get("page") #指定のページ数を格納
+        user_diary = paginator.get_page(page_number) #指定ページの記事を格納
+        # EXPの管理
+        user_diary_count = Diary.objects.filter(diary_user_id=request.user.id).count() #ユーザーの記事執筆数
+        print(f"***user_diary_count:{user_diary_count}***")
+        user_diary_comment_count = DiaryComment.objects.filter(diary_comment_user_id=request.user.id).count() #ユーザーの日記へのコメント数
+        print(f"***user_diary_comment_count:{user_diary_comment_count}***")
+        user_game_comment_count = GameComment.objects.filter(game_comment_user_id=request.user.id).count() #ユーザーのゲームへのコメント数
+        print(f"***user_game_comment_count:{user_game_comment_count}***")
+        latest_exp=(user_diary_count)*100 + (user_diary_comment_count + user_game_comment_count)*10 #記事執筆は10倍
+        print(f"***latest_exp:{latest_exp}***")
+        latest_rank=calculate_rank(latest_exp) #EXPを元にユーザーランクの計算
+        print(f"***latest_rank:{latest_rank}***")
+        request.user.exp = latest_exp #経験値をセーブ
+        # ランクの管理
+        latest_rank_data = calculate_rank(latest_exp) #return {'rank': rank, 'remaining_exp': remaining_exp}
+        latest_rank = latest_rank_data['rank']  # 'rank' キーを使ってランクを取得
+        remaining_exp = latest_rank_data['remaining_exp']  # 'remaining_exp' キーを使って残り経験値を取得
+        print(f"***latest_rank:{latest_rank}***")
+        print(f"***remaining_exp:{remaining_exp}***")
+        request.user.rank = latest_rank
+        # EXP&Rank情報をセーブ
+        request.user.save()
+
         params={
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
+        "userdiary"     :   user_diary,
+        "remaining_exp" :   remaining_exp,
         }
         return render(request, 'accounts/userpage.html', params)
     else:                             # ユーザーが未認証の場合の処理
@@ -92,3 +124,16 @@ def userlogout(request):
     auth_logout(request) #ログアウト処理
     messages.info(request, "ログアウトしました")
     return redirect('/')
+
+def calculate_rank(exp):
+    base_exp = 100 # ランクアップに必要な経験値の基準値
+    rank = 0 #ランク初期値
+    exp_increase_rate = 1.2 #ランクアップに必要な経験値の増加率
+    required_exp = 0
+    # 経験値がランクアップに必要な経験値を超えるまでランクを上げる
+    while exp >= required_exp:
+        rank += 1
+        required_exp = base_exp * (exp_increase_rate ** rank)
+        remaining_exp = int(required_exp - exp)
+        print(f"rank:{rank} required_exp:{required_exp}")
+    return {'rank': rank, 'remaining_exp': remaining_exp}

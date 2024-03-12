@@ -1,5 +1,6 @@
 from django import forms
 from.models import Game,GameComment
+from top.models import Tag
 
 # Messaeフォーム
 
@@ -15,6 +16,8 @@ class GameCommentForm(forms.ModelForm): #保存用にModelFormを使う
         }
 
 class GameCreateForm(forms.ModelForm):
+    game_tag = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = Game
         fields=["game_title","game_tag","game_content","game_image"]

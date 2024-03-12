@@ -15,8 +15,10 @@
     <img src="{{ MEDIA_URL }}{{ login_user.userimage.url }}" alt="{{ login_user.nickname }}">
 {% endif %}
 
-<p>Exp.{{login_user.exp}}</p>
+<p>Exp.{{login_user.exp}}  NextRank…{{remaining_exp}}exp</p>
 <p>Rank.{{login_user.rank}}</p>
+
+<hr>
 
 <form action="{% url 'edituser'%}" method="post" class="mt-3">
     {% csrf_token %}
@@ -24,6 +26,65 @@
     <button class="btn btn-primary">ユーザー情報編集</button>
     </div>
 </form>
+
+<hr>
+<h3>作成した記事</h3>
+{% for diary in userdiary %}
+    <div>
+        <h2><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></h2>
+        <p>∟ゲームタイトル:{{diary.diary_game.game_title}}
+    </div>
+{% endfor %}
+
+<ul class="pagination justify-content-center">
+    {% comment %} 前頁の有無確認 {% endcomment %}
+    {% if userdiary.has_previous %}
+    {% comment %} 先頭ページへ戻る {% endcomment %}
+    <li class="page-item">
+        <a class="page-link" href="?page=1">&laquo; first</a>
+    </li>
+    {% comment %} １つ前のページへ {% endcomment %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ userdiary.previous_page_number }}">&laquo; prev</a>
+    </li>
+    {%else%}
+    {% comment %} 前ページが無い場合の文字列表示 {% endcomment %}
+    <li class="page-item">
+        <a class="page-link" >&laquo; first</a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" >&laquo; prev</a>
+    </li>
+    {%endif%}
+
+    {% comment %} 現在のページ数表示 {% endcomment %}
+    <li class="page-item">
+        <a class="page-link">
+            {{userdiary.number}}/{{userdiary.paginator.num_pages}}
+        </a>
+    </li>
+
+    {% comment %} 次頁の有無確認 {% endcomment %}
+    {% if userdiary.has_next %}
+    {% comment %} 次ページへ進む {% endcomment %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ userdiary.next_page_number }}">next &raquo;</a>
+    </li>
+    {% comment %} 最終ページへ {% endcomment %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ userdiary.paginator.num_pages }}">last &raquo;</a>
+    </li>
+    {%else%}
+    {% comment %} 次ページが無い場合の文字列表示 {% endcomment %}
+    <li class="page-item">
+        <a class="page-link" >next &raquo;</a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" >last &raquo;</a>
+    </li>
+    {%endif%}
+</ul>
+
 
 {% endblock %}
 

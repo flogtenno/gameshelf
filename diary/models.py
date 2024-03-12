@@ -17,6 +17,9 @@ class Diary(models.Model):
     def __str__(self):
         return f"{str(self.diary_title)}({str(self.diary_user)})"
 
+    class Meta:
+        ordering = ("-id",)
+
 class DiaryImage(models.Model):
     diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     diary_image_image = models.ImageField(upload_to="media/")
