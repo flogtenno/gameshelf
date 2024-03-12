@@ -22,26 +22,32 @@ def diary(request, diary_id):
     params = {
         "login_user"     :   request.user, #現在のログインユーザー情報（request.user）
         "displaydiary"   :   diary, #diary詳細情報全体
-        "displayimage"   :   image,
+        "displayimage"   :   image, #画像（複数可）
         "displaycomment" :   comment, #diaryに対してのコメント一覧
-        "commentform"    :   form,
+        "commentform"    :   form, #コメント入力用フォーム
     }
+
+    if diary.diary_spoiler: #ネタバレがTrueなら注意メッセージを表示
+        messages.warning(request, "※※ネタバレを含みます※※")
 
     return render(request, 'diary/diary.html', params)
 
-def newdiary(request):
+def newdiary(request, game_id):
     if request.method == 'POST':
         form = DiaryCreateForm(request.POST, request.FILES) #request.FILESが無いとファイルの登録不可、注意
         if form.is_valid():
-            diary = form.save()
+            temp = form.save(commit=False) #保存先との関連付けを行う
+            temp.diary_user = request.user
+            temp.diary_game_id = game_id
+            temp.save()
+            form.save_m2m() # 多対多の関係を持つタグの保存
             messages.success(request, "作成しました")
-            return redirect('diary', diary_id=diary.id) #diary = form.save()でdiaryに丸々保存内容が入っている、diary.idを指定して新規作成したページへ飛べる
-
+            return redirect('diary', diary_id=temp.id) #diary = form.save()でdiaryに丸々保存内容が入っている、diary.idを指定して新規作成したページへ飛べる
     params = {
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
         "createform"    :   DiaryCreateForm(),
+        "game_id"       :   game_id,
     }
-
     return render(request, 'diary/newdiary.html', params)
 
 def editdiary(request, diary_id):

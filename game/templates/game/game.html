@@ -11,6 +11,9 @@
 {% block content %}
 <h1>{{ displaygame.game_title }}</h1>
 
+<a href="{% url 'newdiary' displaygame.id %}" class="btn btn-primary mt-3">このゲームで日記を作る</a>
+
+
 <ul class="tags-container">
 <p>タグ：
     {% for tag in displaygame.game_tag.all %}
@@ -19,7 +22,10 @@
 </p>
 </ul>
 
+
 <p>概要：{{ displaygame.game_content }}</p>
+
+
 
 {% if displaygame.game_image %}
     <img src="{{ MEDIA_URL }}{{ displaygame.game_image.url }}" alt="{{ displaygame.game_title }}">

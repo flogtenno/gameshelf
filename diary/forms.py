@@ -1,12 +1,14 @@
 from django import forms
 from.models import Diary,DiaryComment
-
-# Messaeフォーム
+from top.models import Tag
 
 class DiaryCreateForm(forms.ModelForm):
+    diary_tag = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = Diary
-        fields=["diary_title","diary_tag","diary_content"]
+        fields = ["diary_title", "diary_tag", "diary_rating", "diary_content", "diary_spoiler"]
+
 
 class DiaryCommentForm(forms.ModelForm): #保存用にModelFormを使う
     class Meta:

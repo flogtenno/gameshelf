@@ -9,18 +9,33 @@
 
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
+
+{% comment %} タイトル表示 {% endcomment %}
 <h1>{{ displaydiary.diary_title }}</h1>
 
+{% comment %} 編集ボタン {% endcomment %}
+<form action="{% url 'editdiary' displaydiary.id %}" method="get" class="mt-3">
+    {% csrf_token %}
+    <div style="text-align: right;">
+    <button class="btn btn-primary">日記編集</button>
+    </div>
+</form>
+
+
+{% comment %} 日記詳細表示エリア {% endcomment %}
 <ul class="tags-container">
 <p>タグ：
     {% for tag in displaydiary.diary_tag.all %}
         <li class="tag-item">{{ tag }},</li>
-    {% endfor %}
-</p>
-</ul>
+    {% endfor %}</p></ul>
+
+<p>点数：{{ displaydiary.diary_rating }}</p>
 
 <p>本文：{{ displaydiary.diary_content }}</p>
 
+<p>記事作成者:{{ displaydiary.diary_user }}</p>
+
+{% comment %} 日記に紐づいた画像を表示 {% endcomment %}
 <hr>
 <p>画像</p>
 {% for image in displayimage %}
@@ -29,16 +44,13 @@
     <hr>
 {% endfor %}
 
-
-<form action="{% url 'editdiary' displaydiary.id %}" method="get" class="mt-3">
-    {% csrf_token %}
-    <div style="text-align: right;">
-    <button class="btn btn-primary">ゲーム詳細編集</button>
-    </div>
-</form>
-
+{% comment %} ゲーム詳細表示エリア {% endcomment %}
+<h3>ゲームタイトル:{{ displaydiary.diary_game.game_title }}</h3>
+<img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}">
+<a href="{% url 'game' displaydiary.diary_game.id %}" class="btn btn-primary mt-3">ゲーム詳細</a>
 <hr>
 
+{% comment %} コメントエリア {% endcomment %}
 <form action="{% url 'diary' displaydiary.id %}" method="post" class="mt-3">
     {% csrf_token %}
     <label>コメント:</label>

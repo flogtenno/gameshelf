@@ -3,6 +3,6 @@ from . import views
 
 urlpatterns = [
     path('<int:diary_id>', views.diary,name="diary"),
-    path('newdiary', views.newdiary,name="newdiary"),
+    path('newdiary/<int:game_id>', views.newdiary,name="newdiary"),
     path('editdiary/<int:diary_id>', views.editdiary,name="editdiary"),
     ]
