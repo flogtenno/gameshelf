@@ -35,11 +35,13 @@ def save_edituser(request):
         edit_profile.save() #更新後のデータで上書き処理
         messages.success(request, "ユーザー情報を編集しました")
         print("***保存成功***")
-        return redirect(to="userpage/") #リダイレクトで飛ばす際には「/」がないとトップからの絶対パスとして認識されてしまう
+        return redirect(to="userpage/") #path('userpage/',views.userpage,name='userpage'),
+        #このタイミングでuserpageをrenderすると、保存前のrequest情報を使用しての表示となり内容が更新されていないものが表示される
+        #redirectで再度views.userpageを呼び出し、更新された値を再取得することで画面が更新される
     else:
         messages.warning(request, "ユーザー情報編集失敗")
         print("***保存エラー***")
-        return redirect(to="userpage/") #リダイレクトで飛ばす際には「/」がないとトップからの絶対パスとして認識されてしまう
+        return redirect(to="userpage/") #path('userpage/',views.userpage,name='userpage'),
 
 # 新規ユーザー登録～～～～～～～～～～～～～～～～～～～
 def createuser(request):
@@ -62,7 +64,6 @@ def createuser(request):
         return render(request, 'accounts/createuser.html', params)
 
 # ログインページ～～～～～～～～～～～～～～～～～～～
-
 def userlogin(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
