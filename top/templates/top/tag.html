@@ -1,0 +1,34 @@
+{% extends "top/layout.html" %}
+{% load static %}
+{% comment %} タイトルブロック部 {% endcomment %}
+{% block title %}Tags{% endblock %}
+
+{% comment %} ヘッダーブロック部 {% endcomment %}
+{% block header %}
+{% endblock %}
+
+{% comment %} コンテンツブロック部 {% endcomment %}
+{% block content %}
+
+{% comment %} 全タグ表示 {% endcomment %}
+<h2>AllTags!</h2>
+
+<ul>
+{% for tag in alltags %}
+  <li><a href="{% url 'tag_search' tag.id %}">{{ tag }}</a></li>
+{% endfor %}
+</ul>
+
+{% comment %} タグ追加 {% endcomment %}
+<hr>
+<h2>NewTag!</h2>
+<form action="{% url 'tag' %}" method="post" class="mt-3">
+    {% csrf_token %}
+    {{ createform.as_p }}
+    <button class="btn btn-primary">タグ追加</button>
+</form>
+{% endblock %}
+
+{% comment %} フッターブロック部 {% endcomment %}
+{% block footer %}
+{% endblock %}
