@@ -1,5 +1,5 @@
 from django import forms
-from.models import Diary,DiaryComment
+from.models import Diary,DiaryComment,DiaryImage
 from top.models import Tag
 
 class DiaryCreateForm(forms.ModelForm):
@@ -21,3 +21,11 @@ class DiaryCommentForm(forms.ModelForm): #保存用にModelFormを使う
             "diary_comment_comment": "",  # ラベルを空に設定する
         }
 
+class DiaryImageForm(forms.ModelForm):
+    class Meta:
+        model = DiaryImage
+        fields = ['diary_image_image', 'diary_image_comment']
+        labels = {
+            'diary_image_image': '画像',
+            'diary_image_comment': 'コメント',
+        }

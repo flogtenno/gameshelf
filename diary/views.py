@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import Diary,DiaryComment,DiaryImage
-from .forms import DiaryCommentForm,DiaryCreateForm
+from .forms import DiaryCommentForm,DiaryCreateForm,DiaryImageForm
 from django.contrib import messages #メッセージの送信完了をおしらせ
 
 # 日記ページ表示～～～～～～～～～～～～～～～～～～～～～～～～～～～～
@@ -54,30 +54,61 @@ def newdiary(request, game_id):
 # 日記ページ編集～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 def editdiary(request, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
-    params = {
-        "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
-        "editdiary"     :   editdiary,
-        "editform"      :   DiaryCreateForm(instance=editdiary)
-    }
-    return render(request, "diary/editdiary.html", params)
-
-def save_editdiary(request, diary_id):
-    editdiary = Diary.objects.get(pk=diary_id)
     if request.user.id == editdiary.diary_user_id: #編集リクエスト者と、記事作成者が同一かのチェック
         print("***ユーザー情報一致***")
-        form = DiaryCreateForm(request.POST, instance=editdiary)
-        if form.is_valid():
-            diary = form.save()
-            messages.success(request, "編集しました")
-            return redirect('diary', diary_id=editdiary.id)
-        else:
-            print("***入力情報エラー***")
-            messages.error(request, "入力情報エラー")
-            return redirect('diary', diary_id=editdiary.id)
+        params = {
+            "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
+            "editdiary"     :   editdiary,
+            "editform"      :   DiaryCreateForm(instance=editdiary)
+        }
+        return render(request, "diary/editdiary.html", params)
     else:
         print("***ユーザー情報不一致***")
         messages.error(request, "ユーザー情報不一致")
         return redirect('diary', diary_id=editdiary.id)
+
+def save_editdiary(request, diary_id):
+    editdiary = Diary.objects.get(pk=diary_id)
+    form = DiaryCreateForm(request.POST, instance=editdiary)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "編集しました")
+        return redirect('diary', diary_id=editdiary.id)
+    else:
+        print("***入力情報エラー***")
+        messages.error(request, "入力情報エラー")
+        return redirect('diary', diary_id=editdiary.id)
+
+# 日記への画像追加~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def addimagediary(request, diary_id):
+    editdiary = Diary.objects.get(pk=diary_id)
+    if request.user.id == editdiary.diary_user_id: #編集リクエスト者と、記事作成者が同一かのチェック
+        print("***ユーザー情報一致***")
+        params = {
+            "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
+            "editdiary"     :   editdiary,
+            "editform"      :   DiaryImageForm()
+        }
+        return render(request, "diary/addimagediary.html", params)
+    else:
+        print("***ユーザー情報不一致***")
+        messages.error(request, "ユーザー情報不一致")
+        return redirect('diary', diary_id=editdiary.id)
+
+
+def save_addimagediary(request, diary_id):
+    editdiary = Diary.objects.get(pk=diary_id)
+    form = DiaryImageForm(request.POST, request.FILES)
+    if form.is_valid():
+        diary_image = form.save(commit=False) # Diary インスタンスと関連付ける
+        diary_image.diary_image_diary = editdiary #どのDiaryに紐づく画像かを記録
+        diary_image.save()
+        return redirect('diary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
+    else:
+        print("***入力情報エラー***")
+        messages.error(request, "入力情報エラー")
+        return redirect('diary', diary_id=editdiary.id)
+
 
 """
 comment.diary_comment_diary に diary オブジェクトを直接代入する場合、diary オブジェクトがまだデータベースに保存されていない可能性があります。

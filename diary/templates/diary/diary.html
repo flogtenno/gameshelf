@@ -44,6 +44,16 @@
     <hr>
 {% endfor %}
 
+{% comment %} 日記への画像の追加 {% endcomment %}
+<form action="{% url 'addimagediary' displaydiary.id %}" method="post" class="mt-3">
+    {% csrf_token %}
+    <div style="text-align: right;">
+    <button class="btn btn-primary">画像追加</button>
+    </div>
+</form>
+
+<hr>
+
 {% comment %} ゲーム詳細表示エリア {% endcomment %}
 <h3>ゲームタイトル:{{ displaydiary.diary_game.game_title }}</h3>
 <img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}">
