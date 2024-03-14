@@ -48,6 +48,11 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tag' %}">[Tags]</a>
         </li>
+    <form action="{% url 'keyword_search' %}" method="GET">
+        <input type="text" name="keyword" placeholder="キーワードを入力してください">
+        <button type="submit">検索</button>
+    </form>
+
 
 {% comment %} 画像の配置 {% endcomment %}
         <div class="navbar-brand mx-auto">

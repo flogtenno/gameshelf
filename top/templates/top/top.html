@@ -9,10 +9,28 @@
 
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
-    <h1>{{title}}</h1>
-        <h2>logined: "{{login_user}}"</h2>
-        <img src="{% static image1 %}">
-        <img src="../../../static/gameshelf.jpg">
+{% if user.is_authenticated %}
+    <h2>Welcome Back {{login_user.nickname}}!</h2>
+{% endif %}
+
+<hr>
+<h2>Latest Diary</h2>
+{% for diary in first_three_diary %}
+    <div>
+        <h2><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></h2>
+        <p>∟ゲームタイトル:{{diary.diary_game.game_title}}
+    </div>
+{% endfor %}
+
+<hr>
+<h2>Latest Game</h2>
+{% for game in first_three_game %}
+    <div>
+        <h2><a href="/game/{{ game.id }}">{{ game.game_title }}</a></h2>
+    </div>
+{% endfor %}
+
+
 {% endblock %}
 
 {% comment %} フッターブロック部 {% endcomment %}

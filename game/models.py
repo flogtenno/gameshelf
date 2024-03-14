@@ -13,6 +13,9 @@ class Game(models.Model):
     def __str__(self):
         return self.game_title
 
+    class Meta:
+        ordering = ['-id']
+
 class GameComment(models.Model):
     game_comment_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     game_comment_game = models.ForeignKey(Game, on_delete=models.CASCADE)
