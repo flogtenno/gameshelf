@@ -17,7 +17,9 @@
 <ul class="tags-container">
 <p>タグ：
     {% for tag in displaygame.game_tag.all %}
-        <li class="tag-item">{{ tag }},</li>
+        <li class="tag-item">
+        <a href="{% url 'tag_search' tag.id %}">{{ tag }} </a>
+        </li>
     {% endfor %}
 </p>
 </ul>

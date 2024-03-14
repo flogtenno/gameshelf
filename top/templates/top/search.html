@@ -10,12 +10,12 @@
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
 
-<h1>Search Result</h1>
+<h1>Search Result 「{{tagname}}」</h1>
 
 <hr>
 
 <div>
-  <h2>Diary Display</h2>
+  <h2>Diary Result</h2>
   <ul>
     {% for diary in diary_display_page %}
       <li><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></li>
@@ -37,7 +37,7 @@
 <hr>
 
 <div>
-  <h2>Game Display</h2>
+  <h2>Game Result</h2>
   <ul>
     {% for game in game_display_page %}
       <li><a href="/game/{{ game.id }}">{{ game.game_title }}</a></li>

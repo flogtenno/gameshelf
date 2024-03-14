@@ -78,11 +78,19 @@ def createuser(request):
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            print("***CreateOK***")
-            messages.success(request, "登録成功")
-            return redirect(to='/')  # 登録成功時のリダイレクト先
+            print("***Create_OK***")
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                print("***Login_OK***")
+                messages.success(request, "登録成功")
+                return redirect('/')  # 登録成功時のリダイレクト先
+            else:
+                print("***Login_NG***")
         else:
-            print("***CreateNG***")
+            print("***Create_NG***")
             messages.warning(request, "登録失敗")
             return redirect(to='/accounts/createuser')  # 登録失敗時のリダイレクト先
     else:

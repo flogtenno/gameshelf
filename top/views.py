@@ -11,11 +11,9 @@ from game.models import Game
 def top (request):
     params={
         "login_user"     :   request.user, #現在のログインユーザー情報（request.user）
-        "title"          :   "GameShelf", #保存用のModelForm、保存先はMessage
+        "title"          :   "GameShelf",
         "image1"         :   "/gameshelf.jpg", #指定されたページのポストが格納されている。HTMLで表示するため。
     }
-
-    # messages.success(request, "test")
 
     return render(request, "top/top.html", params)
 
@@ -57,6 +55,7 @@ def tag_search(request, tag_id):
     diary_display_page = diary_paginator.get_page(diary_page_number) #要求のあったページ情報を保存
     game_display_page = game_paginator.get_page(game_page_number)
     params={
+        "tagname"            :   tag,
         "diary_display_page" :   diary_display_page,
         "game_display_page"  :   game_display_page,
     }
