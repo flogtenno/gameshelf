@@ -1,0 +1,64 @@
+{% extends "top/layout.html" %}
+{% load static %}
+{% comment %} タイトルブロック部 {% endcomment %}
+{% block title %}[GameShelf]Search Result{% endblock %}
+
+{% comment %} ヘッダーブロック部 {% endcomment %}
+{% block header %}
+{% endblock %}
+
+{% comment %} コンテンツブロック部 {% endcomment %}
+{% block content %}
+
+<h1>Search Result</h1>
+
+<hr>
+
+<div>
+  <h2>Diary Display</h2>
+  <ul>
+    {% for diary in diary_display_page %}
+      <li><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></li>
+    {% endfor %}
+    {% if not diary_display_page %}
+    <p>No Result…</p>
+    {% endif %}
+  </ul>
+{% comment %} ページネーションはDiaryとGameそれぞれの現在のページ数を<a>でリンクすることでページを保持 {% endcomment %}
+  {% if diary_display_page.has_previous %}
+    <a href="?diary-page={{ diary_display_page.previous_page_number }}&game-page={{ game_display_page.number }}">Previous</a>
+  {% endif %}
+  <span>Page {{ diary_display_page.number }}/{{ diary_display_page.paginator.num_pages }}</span>
+  {% if diary_display_page.has_next %}
+    <a href="?diary-page={{ diary_display_page.next_page_number }}&game-page={{ game_display_page.number }}">Next</a>
+  {% endif %}
+</div>
+
+<hr>
+
+<div>
+  <h2>Game Display</h2>
+  <ul>
+    {% for game in game_display_page %}
+      <li><a href="/game/{{ game.id }}">{{ game.game_title }}</a></li>
+    {% endfor %}
+    {% if not game_display_page %}
+    <p>No Result…</p>
+    {% endif %}
+  </ul>
+
+  {% if game_display_page.has_previous %}
+    <a href="?game-page={{ game_display_page.previous_page_number }}&diary-page={{ diary_display_page.number }}">Previous</a>
+  {% endif %}
+  <span>Page {{ game_display_page.number }}/{{ game_display_page.paginator.num_pages }}</span>
+  {% if game_display_page.has_next %}
+    <a href="?game-page={{ game_display_page.next_page_number }}&diary-page={{ diary_display_page.number }}">Next</a>
+  {% endif %}
+</div>
+
+
+{% endblock %}
+
+{% comment %} フッターブロック部 {% endcomment %}
+{% block footer %}
+{% endblock %}

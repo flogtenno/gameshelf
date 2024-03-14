@@ -1,7 +1,7 @@
 {% extends "top/layout.html" %}
 {% load static %}
 {% comment %} タイトルブロック部 {% endcomment %}
-{% block title %}Tags{% endblock %}
+{% block title %}[GameShelf]Tags{% endblock %}
 
 {% comment %} ヘッダーブロック部 {% endcomment %}
 {% block header %}
@@ -15,7 +15,7 @@
 
 <ul>
 {% for tag in alltags %}
-  <li><a href="{% url 'tag_search' tag.id %}">{{ tag }}</a></li>
+    <li><a href="{% url 'tag_search' tag.id %}">{{ tag }}</a></li>
 {% endfor %}
 </ul>
 

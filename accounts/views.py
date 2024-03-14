@@ -25,18 +25,15 @@ def userpage(request):
         print(f"***user_game_comment_count:{user_game_comment_count}***")
         latest_exp=(user_diary_count)*100 + (user_diary_comment_count + user_game_comment_count)*10 #記事執筆は10倍
         print(f"***latest_exp:{latest_exp}***")
-        latest_rank=calculate_rank(latest_exp) #EXPを元にユーザーランクの計算
-        print(f"***latest_rank:{latest_rank}***")
-        request.user.exp = latest_exp #経験値をセーブ
+        request.user.exp = latest_exp #経験値情報をユーザーテーブルに記録
         # ランクの管理
         latest_rank_data = calculate_rank(latest_exp) #return {'rank': rank, 'remaining_exp': remaining_exp}
         latest_rank = latest_rank_data['rank']  # 'rank' キーを使ってランクを取得
         remaining_exp = latest_rank_data['remaining_exp']  # 'remaining_exp' キーを使って残り経験値を取得
         print(f"***latest_rank:{latest_rank}***")
         print(f"***remaining_exp:{remaining_exp}***")
-        request.user.rank = latest_rank
-        # EXP&Rank情報をセーブ
-        request.user.save()
+        request.user.rank = latest_rank #ランク情報をユーザーテーブルに記録
+        request.user.save() # EXP&Rank情報をセーブ
 
         params={
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
@@ -125,6 +122,7 @@ def userlogout(request):
     messages.info(request, "ログアウトしました")
     return redirect('/')
 
+# ランク計算用関数～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 def calculate_rank(exp):
     base_exp = 100 # ランクアップに必要な経験値の基準値
     rank = 0 #ランク初期値
@@ -135,5 +133,5 @@ def calculate_rank(exp):
         rank += 1
         required_exp = base_exp * (exp_increase_rate ** rank)
         remaining_exp = int(required_exp - exp)
-        print(f"rank:{rank} required_exp:{required_exp}")
+        # print(f"rank:{rank} required_exp:{required_exp}")
     return {'rank': rank, 'remaining_exp': remaining_exp}
