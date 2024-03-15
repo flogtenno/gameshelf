@@ -67,6 +67,7 @@ def editdiary(request, diary_id):
         messages.error(request, "ユーザー情報不一致")
         return redirect('diary', diary_id=editdiary.id)
 
+
 def save_editdiary(request, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
     form = DiaryCreateForm(request.POST, instance=editdiary)
@@ -117,6 +118,7 @@ def save_addimagediary(request, diary_id):
         messages.error(request, "入力情報エラー")
         return redirect('diary', diary_id=editdiary.id)
 
+# 日記の画像削除~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def deleteimagediary(request, image_id, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
     deleteimage = DiaryImage.objects.get(id=image_id)
@@ -127,8 +129,18 @@ def deleteimagediary(request, image_id, diary_id):
         messages.error(request, "削除失敗")
     return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
 
+# 日記の画像にメインフラグ付与～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+def set_mainflag(request, diary_id, image_id):
+    editdiary = Diary.objects.get(pk=diary_id)
+    mainimage = DiaryImage.objects.get(id=image_id)
 
+    if request.method == 'POST':
+        mainimage.diary_image_mainflag = True
+        mainimage.save()
+        messages.success(request, "メイン画像を設定しました")
+        return redirect('addimagediary', diary_id=editdiary.id)
 
+    return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
 """
 comment.diary_comment_diary に diary オブジェクトを直接代入する場合、diary オブジェクトがまだデータベースに保存されていない可能性があります。
 そのため、comment オブジェクトを保存しようとすると、Django は diary オブジェクトを保存しようとしているかもしれません。

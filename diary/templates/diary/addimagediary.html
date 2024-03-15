@@ -20,10 +20,21 @@
 
 <hr>
 {% for image in displayimage %}
+{% comment %} メインフラグ付与 {% endcomment %}
+    <form action="{% url 'set_mainflag' image.id editdiary.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">MAIN画像に設定</button>
+    </form>
+{% comment %} 画像を表示 {% endcomment %}
+    {% if image.diary_image_mainflag %}
+        <p>★ MAIN画像 ★</p>
+    {%endif%}
     <img src="{{ MEDIA_URL }}{{ image.diary_image_image.url }}" alt="◆◆◆">
     {% if image.diary_image_comment %}
-        <p>{{ image.diary_image_comment }}</p>
+        <p>画像コメント：{{ image.diary_image_comment }}</p>
     {%endif%}
+
+{% comment %} 画像削除ボタン {% endcomment %}
     <form action="{% url 'deleteimagediary' image.id editdiary.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">画像削除</button>
@@ -31,7 +42,7 @@
     <hr>
 {% endfor %}
 
-
+<h2><a href="/diary/{{ editdiary.id }}">戻る</a></h2>
 {% endblock %}
 
 {% comment %} フッターブロック部 {% endcomment %}
