@@ -15,8 +15,12 @@
     <img src="{{ MEDIA_URL }}{{ login_user.userimage.url }}" alt="{{ login_user.nickname }}">
 {% endif %}
 
+
 <p>Exp.{{login_user.exp}}  NextRank…{{remaining_exp}}exp</p>
 <p>Rank.{{login_user.rank}}</p>
+<div class="info" title="EXP:ユーザーの活動(日記執筆、コメント追加)によって得られます。  Rank:Expが一定数溜まると上昇します。">
+Exp&Rankについて<img src="../../../static/info.png" height="25">
+</div>
 
 <hr>
 

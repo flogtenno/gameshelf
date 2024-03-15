@@ -13,7 +13,7 @@ def top (request):
     first_three_game = Game.objects.all()[:3]
     print(first_three_diary)
     print(first_three_game)
-    
+
     params={
         "login_user"         :   request.user, #現在のログインユーザー情報（request.user）
         "first_three_diary"  :   first_three_diary,
@@ -52,8 +52,8 @@ def tag_search(request, tag_id):
     hit_game = Game.objects.filter(game_tag=tag)
     # print(f"*****diary:{hit_diaries}*****")
     # print(f"*****game:{hit_game}*****")
-    diary_paginator = Paginator(hit_diaries, 3) #3つで区切る
-    game_paginator = Paginator(hit_game, 3) #3つで区切る
+    diary_paginator = Paginator(hit_diaries, 4) #4つで区切る
+    game_paginator = Paginator(hit_game, 4) #4つで区切る
     diary_page_number = request.GET.get('diary-page', 1) #HTML側からページの要求があるので保存
     game_page_number = request.GET.get('game-page', 1) #初期値は1
     diary_display_page = diary_paginator.get_page(diary_page_number) #要求のあったページ情報を保存
@@ -75,8 +75,8 @@ def keyword_search(request):
     # 日記の検索
     diary_results = Diary.objects.filter(Q(diary_title__icontains=keyword) | Q(diary_content__icontains=keyword) | Q(diary_tag__tag__icontains=keyword)).distinct()
 
-    game_paginator = Paginator(game_results, 3) # ページネーション
-    diary_paginator = Paginator(diary_results, 3)
+    game_paginator = Paginator(game_results, 4) # ページネーション
+    diary_paginator = Paginator(diary_results, 4)
 
     game_page_number = request.GET.get('game_page',1) #対象のページ取得
     diary_page_number = request.GET.get('diary_page',1)
