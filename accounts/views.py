@@ -10,7 +10,6 @@ from game.models import Game,GameComment
 # ユーザーページ～～～～～～～～～～～～～～～～～～～
 def userpage(request):
     if request.user.is_authenticated: # ユーザーが認証されている場合の処理
-        print(f"***ユーザーページアクセス*****User：{request.user}******")
         # ユーザー作成記事の格納
         user_diary_all = Diary.objects.filter(diary_user=request.user) #ユーザー作成記事の情報を送付
         paginator = Paginator(user_diary_all, 3) #3つで区切る
@@ -40,6 +39,7 @@ def userpage(request):
         "userdiary"     :   user_diary,
         "remaining_exp" :   remaining_exp,
         }
+        print(f"***ユーザーページアクセス*****User：{request.user}******")
         return render(request, 'accounts/userpage.html', params)
     else:                             # ユーザーが未認証の場合の処理
         print("*****未ログイン*****")
@@ -51,7 +51,7 @@ def edituser(request):
     userprofile = CustomUser.objects.get(id=request.user.id)
     params={
         "login_user"    : request.user, #現在のログインユーザー情報（request.user）
-        "editform"      : CustomUserEditForm(instance=userprofile),
+        "editform"      : CustomUserEditForm(instance=userprofile), #既存値として現在のユーザー情報を入れておく
     }
     print(f"***ユーザー情報編集*****User：{request.user}******")
     return render(request, 'accounts/edituser.html', params)
@@ -60,39 +60,43 @@ def save_edituser(request):
     userprofile = CustomUser.objects.get(id=request.user.id)
     edit_profile = CustomUserEditForm(request.POST, request.FILES, instance=userprofile)
     if edit_profile.is_valid():
-        user = edit_profile.save(commit=False)
+        user = edit_profile.save(commit=False) #保存を止めてモデルとの関連付けだけ行う
         password = edit_profile.cleaned_data.get("password")
         confirm_password = edit_profile.cleaned_data.get("confirm_password")
         if password != confirm_password: # パスワードが一致しない場合はリダイレクトして処理終了
-            messages.warning(request, "パスワードが一致しませんでした。")
+            messages.error(request, "パスワードが一致しませんでした。")
+            print("***Passwords do not match***")
             return redirect(to="userpage/")
-        if password:
+        elif password == confirm_password: #パスワードが一致するなら
             user.set_password(password)
-            update_session_auth_hash(request, user)# パスワードを変更した後、セッションの認証ハッシュを更新する？
-        user.save()
+            update_session_auth_hash(request, user)# パスワードを変更した後、認証ハッシュを更新する
+            print("***Password matches***")
+        else:
+            print("***Password Unknown error***") #ここにたどり着かないことを祈る
+        user.save() #入力内容を保存
         messages.success(request, "ユーザー情報を編集しました")
         return redirect(to="userpage/")
     else:
-        messages.warning(request, "ユーザー情報編集失敗")
+        messages.error(request, "ユーザー情報編集失敗")
         return redirect(to="userpage/")
 
 # 新規ユーザー登録～～～～～～～～～～～～～～～～～～～
 def createuser(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES)
+        form = CustomUserCreationForm(request.POST, request.FILES) #入力された内容をformに保存
         if form.is_valid():
-            form.save()
+            form.save() #入力内容を新規保存
             print("***Create_OK***")
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
+            user = authenticate(request, username=username, password=password) #ログイン認証を実施
+            if user is not None: #ログイン出来るなら、ログインする
                 login(request, user)
                 print("***Login_OK***")
                 messages.success(request, "登録成功")
                 return redirect('/')  # 登録成功時のリダイレクト先
             else:
-                print("***Login_NG***")
+                print("***Login_NG***") #ここでログインできない状態が起こらないことを祈る
         else:
             print("***Create_NG***")
             messages.warning(request, "登録失敗")
@@ -112,7 +116,7 @@ def userlogin(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password) #ユーザーを認証する関数
-            print(f"****user:{user}")
+            print(f"****User:{user}***")
             if user is not None:
                 print("***LoginOK***")
                 login(request, user)
@@ -126,12 +130,14 @@ def userlogin(request):
         params={
             "loginform" : LoginForm()
         }
+    print("***LoginPage Open***")
     return render(request, 'accounts/login.html', params)
 
 # ログアウト～～～～～～～～～～～～～～～～～～～～～～～～～
 def userlogout(request):
     auth_logout(request) #ログアウト処理
     messages.info(request, "ログアウトしました")
+    print("***LogIn Out***")
     return redirect('/')
 
 # ランク計算用関数～～～～～～～～～～～～～～～～～～～～～～～～～～～～

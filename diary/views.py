@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Diary,DiaryComment,DiaryImage
 from .forms import DiaryCommentForm,DiaryCreateForm,DiaryImageForm
 from django.contrib import messages #メッセージの送信完了をおしらせ
+from django.core.exceptions import ObjectDoesNotExist
 
 # 日記ページ表示～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 def diary(request, diary_id):
@@ -15,18 +16,24 @@ def diary(request, diary_id):
             return redirect('diary', diary_id=diary_id) #path('<int:diary_id>', views.diary,name="diary"),
 
     diary       = Diary.objects.get(pk=diary_id) # diary オブジェクトを取得、diaryIDを主キーとしてGET
-    image       = DiaryImage.objects.filter(diary_image_diary=diary) #diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     comment     = DiaryComment.objects.filter(diary_comment_diary=diary) #diary_comment_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     form        = DiaryCommentForm() #コメント入力用フォーム
+    image       = DiaryImage.objects.filter(diary_image_diary=diary) #diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
+
+    try: #メインフラグが１つもなかった場合のエラー対策の為、tryで実行
+        main_image = DiaryImage.objects.get(diary_image_diary=diary, diary_image_mainflag=True) #メインフラグのついた画像を取得する
+    except ObjectDoesNotExist:
+        main_image = None  # メイン画像が存在しない場合は None を設定
 
     params = {
-        "login_user"     :   request.user, #現在のログインユーザー情報（request.user）
-        "displaydiary"   :   diary, #diary詳細情報全体
-        "displayimage"   :   image, #画像（複数可）
-        "displaycomment" :   comment, #diaryに対してのコメント一覧
-        "commentform"    :   form, #コメント入力用フォーム
+        "login_user"        :   request.user, #現在のログインユーザー情報（request.user）
+        "displaydiary"      :   diary, #diary詳細情報全体
+        "displaycomment"    :   comment, #diaryに対してのコメント一覧
+        "commentform"       :   form, #コメント入力用フォーム
+        "displayimage"      :   image, #日記に紐づけられた画像（複数可）
+        "displaymainimage"  :   main_image, #メインフラグのついた画像
     }
-
+    print(main_image)
     if diary.diary_spoiler: #ネタバレ(diary_spoiler)がTrueなら注意メッセージを表示
         messages.warning(request, "※※ネタバレを含みます※※")
 
