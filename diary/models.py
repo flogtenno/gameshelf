@@ -23,7 +23,8 @@ class Diary(models.Model):
 class DiaryImage(models.Model):
     diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     diary_image_image = models.ImageField(upload_to="media/")
-    diary_image_comment = models.CharField(max_length=100)
+    diary_image_comment = models.CharField(max_length=100, blank=True, null=True)
+    diary_image_mainflag = models.BooleanField(default=False) #メイン画像フラグ
 
 class DiaryComment(models.Model):
     diary_comment_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

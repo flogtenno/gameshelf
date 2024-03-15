@@ -42,7 +42,9 @@
 <p>画像</p>
 {% for image in displayimage %}
     <img src="{{ MEDIA_URL }}{{ image.diary_image_image.url }}" alt="◆◆◆">
-    <p>{{ image.diary_image_comment }}</p>
+    {% if image.diary_image_comment %}
+        <p>{{ image.diary_image_comment }}</p>
+    {%endif%}
     <hr>
 {% endfor %}
 

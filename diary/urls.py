@@ -8,4 +8,5 @@ urlpatterns = [
     path('save_editdiary/<int:diary_id>', views.save_editdiary,name="save_editdiary"),
     path('addimagediary/<int:diary_id>', views.addimagediary,name="addimagediary"),
     path('save_addimagediary/<int:diary_id>', views.save_addimagediary,name="save_addimagediary"),
+    path('deleteimagediary/<int:image_id>&<int:diary_id>', views.deleteimagediary,name="deleteimagediary"),
     ]

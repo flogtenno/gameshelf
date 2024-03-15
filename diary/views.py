@@ -82,12 +82,15 @@ def save_editdiary(request, diary_id):
 # 日記への画像追加~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def addimagediary(request, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
+    image     = DiaryImage.objects.filter(diary_image_diary=editdiary) #diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
+
     if request.user.id == editdiary.diary_user_id: #編集リクエスト者と、記事作成者が同一かのチェック
         print("***ユーザー情報一致***")
         params = {
             "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
             "editdiary"     :   editdiary,
-            "editform"      :   DiaryImageForm()
+            "editform"      :   DiaryImageForm(),
+            "displayimage"  :   image, #画像（複数可）
         }
         return render(request, "diary/addimagediary.html", params)
     else:
@@ -103,11 +106,27 @@ def save_addimagediary(request, diary_id):
         diary_image = form.save(commit=False) # Diary インスタンスと関連付ける
         diary_image.diary_image_diary = editdiary #どのDiaryに紐づく画像かを記録
         diary_image.save()
-        return redirect('diary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
+        if request.POST.get('submit_action') == 'add_and_stay': #留まる場合
+            messages.success(request, "画像を追加しました")
+            return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
+        else:
+            messages.success(request, "画像を追加しました")
+            return redirect('diary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
     else:
         print("***入力情報エラー***")
         messages.error(request, "入力情報エラー")
         return redirect('diary', diary_id=editdiary.id)
+
+def deleteimagediary(request, image_id, diary_id):
+    editdiary = Diary.objects.get(pk=diary_id)
+    deleteimage = DiaryImage.objects.get(id=image_id)
+    if request.method == 'POST':
+        deleteimage.delete()
+        messages.success(request, "削除しました")
+    else:
+        messages.error(request, "削除失敗")
+    return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
+
 
 
 """
