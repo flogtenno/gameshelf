@@ -5,11 +5,19 @@
 
 {% comment %} ヘッダーブロック部 {% endcomment %}
 {% block header %}
-<p>WelcomeBack {{ login_user.nickname }}!!</p>
 {% endblock %}
 
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
+
+<h3>WelcomeBack {{ login_user.nickname }}!!</h3>
+
+<form action="{% url 'edituser'%}" method="post" class="mt-3">
+    {% csrf_token %}
+    <div style="text-align: right;">
+    <button class="btn btn-primary">ユーザー情報編集</button>
+    </div>
+</form>
 
 {% if login_user.userimage %}
     <img src="{{ MEDIA_URL }}{{ login_user.userimage.url }}" alt="{{ login_user.nickname }}">
@@ -21,15 +29,6 @@
 <div class="info" title="EXP:ユーザーの活動(日記執筆、コメント追加)によって得られます。  Rank:Expが一定数溜まると上昇します。">
 Exp&Rankについて<img src="../../../static/info.png" height="25">
 </div>
-
-<hr>
-
-<form action="{% url 'edituser'%}" method="post" class="mt-3">
-    {% csrf_token %}
-    <div style="text-align: right;">
-    <button class="btn btn-primary">ユーザー情報編集</button>
-    </div>
-</form>
 
 <hr>
 <h3>作成した記事</h3>

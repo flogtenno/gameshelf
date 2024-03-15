@@ -80,6 +80,20 @@ def save_edituser(request):
         messages.error(request, "ユーザー情報編集失敗")
         return redirect(to="userpage/")
 
+# ユーザー削除～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+def deleteuser(request):
+    deleteuser = CustomUser.objects.get(id=request.user.id)
+    if request.method == 'POST':
+            deleteuser.delete()
+            messages.success(request, "削除しました")
+    else:
+            messages.error(request, "削除失敗")
+    return redirect('/')  # 成功時のリダイレクト先を指定
+
+def deleteuser_confirmation(request):
+    return render(request, 'accounts/deleteuser.html')
+
+
 # 新規ユーザー登録～～～～～～～～～～～～～～～～～～～
 def createuser(request):
     if request.method == 'POST':

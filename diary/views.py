@@ -91,7 +91,6 @@ def save_editdiary(request, diary_id):
 def addimagediary(request, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
     image     = DiaryImage.objects.filter(diary_image_diary=editdiary) #diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
-
     if request.user.id == editdiary.diary_user_id: #編集リクエスト者と、記事作成者が同一かのチェック
         print("***ユーザー情報一致***")
         params = {
@@ -129,25 +128,42 @@ def save_addimagediary(request, diary_id):
 def deleteimagediary(request, image_id, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
     deleteimage = DiaryImage.objects.get(id=image_id)
-    if request.method == 'POST':
-        deleteimage.delete()
-        messages.success(request, "削除しました")
+    if request.user.id == editdiary.diary_user_id: #削除リクエスト者と、記事作成者が同一かのチェック
+        if request.method == 'POST':
+            deleteimage.delete()
+            messages.success(request, "削除しました")
+        else:
+            messages.error(request, "削除失敗")
     else:
-        messages.error(request, "削除失敗")
+        messages.error(request, "ユーザー認証失敗")
     return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
 
 # 日記の画像にメインフラグ付与～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 def set_mainflag(request, diary_id, image_id):
     editdiary = Diary.objects.get(pk=diary_id)
     mainimage = DiaryImage.objects.get(id=image_id)
-
-    if request.method == 'POST':
+    if request.user.id == editdiary.diary_user_id: #削除リクエスト者と、記事作成者が同一かのチェック
         mainimage.diary_image_mainflag = True
         mainimage.save()
         messages.success(request, "メイン画像を設定しました")
         return redirect('addimagediary', diary_id=editdiary.id)
-
     return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
+
+# 日記の削除～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～deletediary
+def deletediary(request, diary_id):
+    editdiary = Diary.objects.get(pk=diary_id)
+    if request.user.id == editdiary.diary_user_id: #削除リクエスト者と、記事作成者が同一かのチェック
+        deletediary = Diary.objects.get(pk=diary_id)
+        if request.method == 'POST':
+            deletediary.delete()
+            messages.success(request, "削除しました")
+        else:
+            messages.error(request, "削除失敗")
+    else:
+        messages.error(request, "ユーザー認証失敗")
+    return redirect('/')  # 成功時のリダイレクト先を指定
+
+
 """
 comment.diary_comment_diary に diary オブジェクトを直接代入する場合、diary オブジェクトがまだデータベースに保存されていない可能性があります。
 そのため、comment オブジェクトを保存しようとすると、Django は diary オブジェクトを保存しようとしているかもしれません。

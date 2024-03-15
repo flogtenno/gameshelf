@@ -10,4 +10,5 @@ urlpatterns = [
     path('save_addimagediary/<int:diary_id>', views.save_addimagediary,name="save_addimagediary"),
     path('deleteimagediary/<int:image_id>&<int:diary_id>', views.deleteimagediary,name="deleteimagediary"),
     path('set_mainflag/<int:image_id>&<int:diary_id>', views.set_mainflag,name="set_mainflag"),
+    path('deletediary/<int:diary_id>', views.deletediary,name="deletediary"),
     ]

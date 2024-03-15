@@ -65,7 +65,9 @@
 
 {% comment %} ゲーム詳細表示エリア {% endcomment %}
 <h3>ゲームタイトル:{{ displaydiary.diary_game.game_title }}</h3>
+{% if displaydiary.diary_game.game_image %}
 <img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}">
+{% endif %}
 <a href="{% url 'game' displaydiary.diary_game.id %}" class="btn btn-primary mt-3">ゲーム詳細</a>
 <hr>
 
