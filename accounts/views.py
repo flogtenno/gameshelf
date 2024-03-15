@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib import messages #メッセージの送信完了をおしらせ
 from .models import CustomUser
 from .forms import CustomUserCreationForm,LoginForm,CustomUserEditForm
-from django.contrib.auth import authenticate, login, logout as auth_logout
+from django.contrib.auth import authenticate, login, logout as auth_logout, update_session_auth_hash
 from django.core.paginator import Paginator
 from diary.models import Diary,DiaryComment
 from game.models import Game,GameComment
@@ -58,19 +58,20 @@ def edituser(request):
 
 def save_edituser(request):
     userprofile = CustomUser.objects.get(id=request.user.id)
-    edit_profile = CustomUserEditForm(request.POST, request.FILES, instance=userprofile) #instanceは「どのメッセージに対して記録するか」を指示する。これが無いと新規登録（POST）と同じになる
-    print(edit_profile)
+    edit_profile = CustomUserEditForm(request.POST, request.FILES, instance=userprofile)
     if edit_profile.is_valid():
-        edit_profile.save() #更新後のデータで上書き処理
+        user = edit_profile.save(commit=False)
+        password = edit_profile.cleaned_data.get("password")
+        if password:
+            user.set_password(password)
+            # パスワードを変更した後、セッションの認証ハッシュを更新する
+            update_session_auth_hash(request, user)
+        user.save()
         messages.success(request, "ユーザー情報を編集しました")
-        print("***保存成功***")
-        return redirect(to="userpage/") #path('userpage/',views.userpage,name='userpage'),
-        #このタイミングでuserpageをrenderすると、保存前のrequest情報を使用しての表示となり内容が更新されていないものが表示される
-        #redirectで再度views.userpageを呼び出し、更新された値を再取得することで画面が更新される
+        return redirect(to="userpage/")
     else:
         messages.warning(request, "ユーザー情報編集失敗")
-        print("***保存エラー***")
-        return redirect(to="userpage/") #path('userpage/',views.userpage,name='userpage'),
+        return redirect(to="userpage/")
 
 # 新規ユーザー登録～～～～～～～～～～～～～～～～～～～
 def createuser(request):
