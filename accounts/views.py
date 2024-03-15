@@ -62,10 +62,13 @@ def save_edituser(request):
     if edit_profile.is_valid():
         user = edit_profile.save(commit=False)
         password = edit_profile.cleaned_data.get("password")
+        confirm_password = edit_profile.cleaned_data.get("confirm_password")
+        if password != confirm_password: # パスワードが一致しない場合はリダイレクトして処理終了
+            messages.warning(request, "パスワードが一致しませんでした。")
+            return redirect(to="userpage/")
         if password:
             user.set_password(password)
-            # パスワードを変更した後、セッションの認証ハッシュを更新する
-            update_session_auth_hash(request, user)
+            update_session_auth_hash(request, user)# パスワードを変更した後、セッションの認証ハッシュを更新する？
         user.save()
         messages.success(request, "ユーザー情報を編集しました")
         return redirect(to="userpage/")
