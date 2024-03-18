@@ -4,23 +4,29 @@ from django.core.paginator import Paginator #ページ区切り
 from django.db.models import Q
 from .forms import CreateTagForm
 from .models import Tag
-from diary.models import Diary
+from diary.models import Diary,DiaryImage
 from game.models import Game
+from django.core.exceptions import ObjectDoesNotExist
 
 # トップページ（目次）___________________________________________________________________
 def top (request):
     first_three_diary = Diary.objects.all()[:3]
-    first_three_game = Game.objects.all()[:3]
-    print(first_three_diary)
-    print(first_three_game)
-
+    first_four_game = Game.objects.all()[:4]
+    for diary in first_three_diary:
+        try: #メインフラグが１つもなかった場合のエラー対策の為、tryで実行
+            main_image = DiaryImage.objects.get(diary_image_diary=diary, diary_image_mainflag=True) #メインフラグのついた画像を取得する
+        except ObjectDoesNotExist:
+            main_image = None  # メイン画像が存在しない場合は None を設定
+        diary.main_image = main_image  # 日記に main_image 属性を追加 diary.main_imageで引っ張れる
+        if diary.main_image:
+            print(f"***タイトル:{diary.diary_title} メイン画像URL:{diary.main_image.diary_image_image.url}***") #メイン画像が取得できてるか？
     params={
         "login_user"         :   request.user, #現在のログインユーザー情報（request.user）
         "first_three_diary"  :   first_three_diary,
-        "first_three_game"   :   first_three_game, #指定されたページのポストが格納されている。HTMLで表示するため。
+        "first_four_game"   :   first_four_game, #指定されたページのポストが格納されている。HTMLで表示するため。
     }
 
-    return render(request, "top/top.html", params)
+    return render(request, "top/index.html", params)
 
 # Tag追加________________________________________________________________________
 def tag(request):
