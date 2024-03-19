@@ -22,7 +22,7 @@
 <form action="{% url 'editdiary' displaydiary.id %}" method="post" class="mt-3">
     {% csrf_token %}
     <div style="text-align: right;">
-    <button class="btn btn-primary">日記編集</button>
+    <button>日記編集</button>
     </div>
 </form>
 
@@ -57,7 +57,7 @@
 <form action="{% url 'addimagediary' displaydiary.id %}" method="post" class="mt-3">
     {% csrf_token %}
     <div style="text-align: right;">
-    <button class="btn btn-primary">画像追加</button>
+    <button>画像追加</button>
     </div>
 </form>
 
@@ -65,10 +65,11 @@
 
 {% comment %} ゲーム詳細表示エリア {% endcomment %}
 <h3>ゲームタイトル:{{ displaydiary.diary_game.game_title }}</h3>
-{% if displaydiary.diary_game.game_image %}
+{% comment %} {% if displaydiary.diary_game.game_image %}
 <img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}">
 {% endif %}
-<a href="{% url 'game' displaydiary.diary_game.id %}" class="btn btn-primary mt-3">ゲーム詳細</a>
+<a href="{% url 'game' displaydiary.diary_game.id %}"><button>ゲーム詳細</button></a> {% endcomment %}
+<a href="{% url 'game' displaydiary.diary_game.id %}" class="image featured"><img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}" style="object-fit: cover; height: 300px;"/></a>
 <hr>
 
 {% comment %} コメントエリア {% endcomment %}
@@ -76,7 +77,7 @@
     {% csrf_token %}
     <label>コメント:</label>
     {{ commentform.as_p }}
-    <button class="btn btn-primary">コメント投稿</button>
+    <button>コメント投稿</button>
 </form>
 
 <hr>

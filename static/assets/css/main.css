@@ -3596,3 +3596,12 @@ input::-moz-focus-inner {
 			}
 
 		}
+
+		img {
+			max-width: 100%; /* 画像の最大幅を親要素の幅に合わせる */
+			height: auto; /* アスペクト比を維持したまま高さを自動的に調整 */
+		}
+		.alert {
+			position: relative;
+			z-index: 1000; /* 必要に応じて適切な値を設定してください */
+		}
