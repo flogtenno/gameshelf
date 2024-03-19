@@ -9,26 +9,72 @@
 
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
-{% if user.is_authenticated %}
-    <h2>Welcome Back {{login_user.nickname}}!</h2>
-{% endif %}
+						<!-- Intro -->
+							<section id="intro">
+								<header>
+									<h2>Game shelf</h2>
+									<p>We were born in an era of games.</p>
+								</header>
+							</section>
 
-<hr>
-<h2>Latest Diary</h2>
-{% for diary in first_three_diary %}
-    <div>
-        <h2><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></h2>
-        <p>∟ゲームタイトル:{{diary.diary_game.game_title}}
-    </div>
-{% endfor %}
+				<!-- Main -->
+					<div id="main">
+                        <hr>
+						<h2>最近執筆された記事</h2>
+						<!-- Diary Post -->
+						{% for diary in first_three_diary %}
+							<article class="post">
+								<header>
+									<div class="title">
+										<h2><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></h2>
+									</div>
+									<div class="meta">
+										<p class="author">執筆者:{{diary.diary_user.nickname}}<img src="{{ MEDIA_URL }}{{ diary.diary_user.userimage.url }}" alt=""/></p>
+									</div>
+								</header>
+								{%if diary.main_image%}
+								<a href="/diary/{{ diary.id }}" class="image featured"><img src="{{ MEDIA_URL }}{{ diary.main_image.diary_image_image.url }}" alt="" style="object-fit: cover; height: 300px;"/></a>
+								{% else %}
+								<a href="/diary/{{ diary.id }}" class="image featured"><img src='{% static "gameshelf.png" %}' alt="" /></a>
+								{%endif	%}
+								<p>{{ diary.diary_content|slice:":100" }}......</p>
+								<footer>
+									<ul class="actions">
+										<li><a href="/diary/{{ diary.id }}" class="button large">read more</a></li>
+									</ul>
+								</footer>
+							</article>
+							{% endfor %}
+					</div>
 
-<hr>
-<h2>Latest Game</h2>
-{% for game in first_three_game %}
-    <div>
-        <h2><a href="/game/{{ game.id }}">{{ game.game_title }}</a></h2>
-    </div>
-{% endfor %}
+						<!-- Game Posts -->
+                        <hr>
+							<section>
+								<h2>最近登録されたゲーム</h2>
+								<div class="mini-posts">
+
+									<!-- Mini Post -->
+									{% for game in first_four_game %}
+										<article class="mini-post">
+											<header>
+												<h3><a href="/game/{{ game.id }}">{{ game.game_title }}</a></h3>
+											</header>
+											<a href="/game/{{ game.id }}" class="image"><img src="{{ MEDIA_URL }}{{ game.game_image.url }}" alt="" /></a>
+										</article>
+									{%endfor%}
+
+								</div>
+							</section>
+
+						<!-- About -->
+                        <hr>
+							<section class="blurb">
+								<h2>About</h2>
+								<p>GameShelfはプレイしたゲームの記録を記事として保存するサイトです。<br>自分のプレイ日記として使うも良し、レビュー記事として使うも良し。<br>日記の作成やコメント等でユーザーに経験値が溜まり、一定数溜まるとランクが上がります。<br>用法用量を守って楽しく使いましょう。</p>
+								{% comment %} <ul class="actions">
+									<li><a href="#" class="button">Learn More</a></li>
+								</ul> {% endcomment %}
+							</section>
 
 
 {% endblock %}

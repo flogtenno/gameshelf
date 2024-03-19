@@ -26,7 +26,7 @@ def top (request):
         "first_four_game"   :   first_four_game, #指定されたページのポストが格納されている。HTMLで表示するため。
     }
 
-    return render(request, "top/index.html", params)
+    return render(request, "top/top.html", params)
 
 # Tag追加________________________________________________________________________
 def tag(request):
