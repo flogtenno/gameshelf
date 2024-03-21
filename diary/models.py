@@ -29,7 +29,7 @@ class DiaryImage(models.Model):
 @receiver(post_save, sender=DiaryImage)
 def ensure_single_main_flag(sender, instance, **kwargs):
     if instance.diary_image_mainflag:
-        # Ensure only one main flag is set per Diary
+        # メインフラグが日記１つに対して、フラグ１つのみになるように他を解除する
         DiaryImage.objects.filter(diary_image_diary=instance.diary_image_diary).exclude(id=instance.id).update(diary_image_mainflag=False)
 
 class DiaryComment(models.Model):

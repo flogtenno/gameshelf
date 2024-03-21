@@ -10,23 +10,18 @@
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
 
-{% comment %} タイトル表示 {% endcomment %}
-<h1>{{ displaydiary.diary_title }}</h1>
+<div style="display: flex; justify-content: space-between;">
+{% comment %} タイトル {% endcomment %}
+    <h1 style="margin: 0;">{{ displaydiary.diary_title }}</h1>
 
 {% comment %} 編集ボタン {% endcomment %}
-<form action="{% url 'editdiary' displaydiary.id %}" method="post" class="mt-3">
-    {% csrf_token %}
-    <div style="text-align: right;">
-    <button>日記編集</button>
-    </div>
-</form>
+    <form action="{% url 'editdiary' displaydiary.id %}" method="post" class="mt-3">
+        {% csrf_token %}
+        <button style="margin: 0;">日記編集</button>
+    </form>
+</div>
 
-{% comment %} メイン画像表示 {% endcomment %}
-{% if displaymainimage.diary_image_image %}
-    <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
-{%endif%}
-
-{% comment %} 日記詳細表示エリア {% endcomment %}
+{% comment %} タグ表示 {% endcomment %}
 <ul class="tags-container">
 <p>タグ：
     {% for tag in displaydiary.diary_tag.all %}
@@ -35,7 +30,16 @@
         </li>
     {% endfor %}</p></ul>
 
-<p>点数：{{ displaydiary.diary_rating }}</p>
+
+
+{% comment %} メイン画像表示 {% endcomment %}
+{% if displaymainimage.diary_image_image %}
+    <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
+{%endif%}
+
+{% comment %} 日記詳細表示エリア {% endcomment %}
+
+<p>スコア：{{ displaydiary.diary_rating }}</p>
 
 <p>本文：{{ displaydiary.diary_content }}</p>
 
