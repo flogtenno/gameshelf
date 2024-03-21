@@ -10,12 +10,12 @@
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
 
-<h1>Fix Gameinfo</h1>
+<h1>Fix Game info</h1>
 
 <form action="{% url 'editgame' editgame.id %}" method="post" class="mt-3" enctype="multipart/form-data">
     {% csrf_token %}
     {{ editform.as_p }}
-    <button class="btn btn-primary">Fix Gameinfo</button>
+    <button>Fix Game info</button>
 </form>
 
 {% endblock %}

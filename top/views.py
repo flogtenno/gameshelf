@@ -81,19 +81,19 @@ def keyword_search(request):
     # 日記の検索
     diary_results = Diary.objects.filter(Q(diary_title__icontains=keyword) | Q(diary_content__icontains=keyword) | Q(diary_tag__tag__icontains=keyword)).distinct()
 
-    game_paginator = Paginator(game_results, 4) # ページネーション
-    diary_paginator = Paginator(diary_results, 4)
+    # game_paginator = Paginator(game_results, 4) # ページネーション
+    # diary_paginator = Paginator(diary_results, 4)
 
-    game_page_number = request.GET.get('game_page',1) #対象のページ取得
-    diary_page_number = request.GET.get('diary_page',1)
+    # game_page_number = request.GET.get('game_page',1) #対象のページ取得
+    # diary_page_number = request.GET.get('diary_page',1)
 
-    game_page_result = game_paginator.get_page(game_page_number) # 対象のページを変数に保存
-    diary_page_result = diary_paginator.get_page(diary_page_number)
+    # game_page_result = game_paginator.get_page(game_page_number) # 対象のページを変数に保存
+    # diary_page_result = diary_paginator.get_page(diary_page_number)
 
     params = {
         'searchword'        : keyword,
-        'diary_display_page': diary_page_result,
-        'game_display_page' : game_page_result,
+        'diary_display_page': diary_results,
+        'game_display_page' : game_results,
     }
 
     return render(request, 'top/search.html', params)

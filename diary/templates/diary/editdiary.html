@@ -15,7 +15,7 @@
 <form action="{% url 'save_editdiary' editdiary.id %}" method="post" class="mt-3" enctype="multipart/form-data">
     {% csrf_token %}
     {{ editform.as_p }}
-    <button class="btn btn-primary">Fix Diary</button>
+    <button>Fix Diary</button>
 </form>
 
 <form action="{% url 'deletediary' editdiary.id %}" method="post" class="mt-3">

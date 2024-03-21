@@ -13,11 +13,6 @@
 {% comment %} タイトル表示 {% endcomment %}
 <h1>{{ displaydiary.diary_title }}</h1>
 
-{% comment %} メイン画像表示 {% endcomment %}
-{% if displaymainimage.diary_image_image %}
-    <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
-{%endif%}
-
 {% comment %} 編集ボタン {% endcomment %}
 <form action="{% url 'editdiary' displaydiary.id %}" method="post" class="mt-3">
     {% csrf_token %}
@@ -26,13 +21,17 @@
     </div>
 </form>
 
+{% comment %} メイン画像表示 {% endcomment %}
+{% if displaymainimage.diary_image_image %}
+    <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
+{%endif%}
 
 {% comment %} 日記詳細表示エリア {% endcomment %}
 <ul class="tags-container">
 <p>タグ：
     {% for tag in displaydiary.diary_tag.all %}
         <li class="tag-item">
-        <a href="{% url 'tag_search' tag.id %}">{{ tag }} </a>
+        <a href="{% url 'tag_search' tag.id %}"><button>{{ tag }}</button></a>
         </li>
     {% endfor %}</p></ul>
 

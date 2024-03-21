@@ -13,7 +13,7 @@
 <form method="post" action="{% url 'createuser' %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ createform.as_p }}
-    <button class="btn btn-primary">アカウント作成</button>
+    <button>アカウント作成</button>
 </form>
 
 {% endblock %}

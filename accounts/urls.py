@@ -9,7 +9,7 @@ urlpatterns = [
     path('save_edituser',views.save_edituser,name='save_edituser'),
     path('createuser',views.createuser,name='createuser'),
     path('login',views.userlogin,name='login'),
-    path('logout', LogoutView.as_view(), name='logout'),
+    path('logout', views.userlogout, name='logout'),
     path('deleteuser',views.deleteuser,name='deleteuser'),
     path('deleteuser_confirmation',views.deleteuser_confirmation,name='deleteuser_confirmation'),
 ]

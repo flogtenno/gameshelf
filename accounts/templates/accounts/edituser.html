@@ -15,7 +15,7 @@
 <form action="{% url 'save_edituser' %}" method="post" class="mt-3" enctype="multipart/form-data">
     {% csrf_token %}
     {{ editform.as_p }}
-    <button class="btn btn-primary">Fix Userinfo</button>
+    <button>Fix Userinfo</button>
 </form>
 
 <form action="{% url 'deleteuser_confirmation' %}" method="post" class="mt-3">
