@@ -12,14 +12,9 @@ from django.core.exceptions import ObjectDoesNotExist
 def top (request):
     first_three_diary = Diary.objects.all()[:3]
     first_four_game = Game.objects.all()[:4]
-    for diary in first_three_diary:
-        try: #メインフラグが１つもなかった場合のエラー対策の為、tryで実行
-            main_image = DiaryImage.objects.get(diary_image_diary=diary, diary_image_mainflag=True) #メインフラグのついた画像を取得する
-        except ObjectDoesNotExist:
-            main_image = None  # メイン画像が存在しない場合は None を設定
-        diary.main_image = main_image  # 日記に main_image 属性を追加 diary.main_imageで引っ張れる
-        if diary.main_image:
-            print(f"***タイトル:{diary.diary_title} メイン画像URL:{diary.main_image.diary_image_image.url}***") #メイン画像が取得できてるか？
+
+    main_img_set(first_three_diary) #メイン画像セット関数
+
     params={
         "login_user"         :   request.user, #現在のログインユーザー情報（request.user）
         "first_three_diary"  :   first_three_diary,
@@ -64,6 +59,9 @@ def tag_search(request, tag_id):
     game_page_number = request.GET.get('game-page', 1) #初期値は1
     diary_display_page = diary_paginator.get_page(diary_page_number) #要求のあったページ情報を保存
     game_display_page = game_paginator.get_page(game_page_number)
+
+    main_img_set(diary_display_page) #メインフラグのついた画像をセット
+
     params={
         "searchword"         :   tag,
         "diary_display_page" :   diary_display_page,
@@ -90,6 +88,8 @@ def keyword_search(request):
     game_page_result = game_paginator.get_page(game_page_number) # 対象のページを変数に保存
     diary_page_result = diary_paginator.get_page(diary_page_number)
 
+    main_img_set(diary_page_result) #メインフラグのついた画像をセット
+
     params = {
         'searchword'        : keyword,
         'diary_display_page': diary_page_result,
@@ -97,3 +97,15 @@ def keyword_search(request):
     }
 
     return render(request, 'top/search.html', params)
+
+# main画像設定関数___________________________________________________________________
+def main_img_set(temp):
+    for diary in temp:
+        try: #メインフラグが１つもなかった場合のエラー対策の為、tryで実行
+            main_image = DiaryImage.objects.get(diary_image_diary=diary, diary_image_mainflag=True) #メインフラグのついた画像を取得する
+        except ObjectDoesNotExist:
+            main_image = None  # メイン画像が存在しない場合は None を設定
+        diary.main_image = main_image  # 日記に main_image 属性を追加 diary.main_imageで引っ張れる
+        if diary.main_image:
+            print(f"***メイン画像セット***タイトル:{diary.diary_title} メイン画像URL:{diary.main_image.diary_image_image.url}***") #メイン画像が取得できてるか？
+    return

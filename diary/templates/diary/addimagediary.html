@@ -34,14 +34,14 @@
     <div class="col">
         <form action="{% url 'set_mainflag' image.id editdiary.id %}" method="post">
             {% csrf_token %}
-            <button type="submit">MAIN画像に設定</button>
+            <button class="blue-button" type="submit">MAIN画像に設定</button>
         </form>
     </div>
 {% comment %} 画像削除ボタン {% endcomment %}
     <div class="col">
         <form action="{% url 'deleteimagediary' image.id editdiary.id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">画像削除</button>
+            <button type="submit" class="red-button">画像削除</button>
         </form>
     </div>
 </div>

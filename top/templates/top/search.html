@@ -16,14 +16,23 @@
 
 <div>
   <h2>Diary Result</h2>
-  <ul>
-    {% for diary in diary_display_page %}
-      <li><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></li>
-    {% endfor %}
-    {% if not diary_display_page %}
-    <p>No Result…</p>
-    {% endif %}
-  </ul>
+
+<section>
+	<div class="mini-posts">
+		{% for diary in diary_display_page %}
+			<article class="mini-post">
+				<header>
+					<h3><a href="/diary/{{ diary.id }}">{{ diary.diary_title }}</a></h3>
+				</header>
+				<a href="/diary/{{ diary.id }}" class="image"><img src="{{ MEDIA_URL }}{{ diary.main_image.diary_image_image.url }}" alt="" style="object-fit: cover; height: 200px;"/></a>
+			</article>
+		{%endfor%}
+	</div>
+</section>
+{% if not diary_display_page %}
+  <p>No Result…</p>
+{% endif %}
+
 {% comment %} ページネーションはDiaryとGameそれぞれの現在のページ数を<a>でリンクすることでページを保持 {% endcomment %}
   {% if diary_display_page.has_previous %}
     <a href="?diary-page={{ diary_display_page.previous_page_number }}&game-page={{ game_display_page.number }}">Previous</a>
@@ -38,14 +47,21 @@
 
 <div>
   <h2>Game Result</h2>
-  <ul>
-    {% for game in game_display_page %}
-      <li><a href="/game/{{ game.id }}">{{ game.game_title }}</a></li>
-    {% endfor %}
-    {% if not game_display_page %}
-    <p>No Result…</p>
-    {% endif %}
-  </ul>
+<section>
+	<div class="mini-posts">
+		{% for game in game_display_page %}
+			<article class="mini-post">
+				<header>
+					<h3><a href="/game/{{ game.id }}">{{ game.game_title }}</a></h3>
+				</header>
+				<a href="/game/{{ game.id }}" class="image"><img src="{{ MEDIA_URL }}{{ game.game_image.url }}" alt="" style="object-fit: cover; height: 200px;"/></a>
+			</article>
+		{%endfor%}
+	</div>
+</section>
+{% if not game_display_page %}
+  <p>No Result…</p>
+{% endif %}
 
   {% if game_display_page.has_previous %}
     <a href="?keyword={{searchword}}&game-page={{ game_display_page.previous_page_number }}&diary-page={{ diary_display_page.number }}">Previous</a>
