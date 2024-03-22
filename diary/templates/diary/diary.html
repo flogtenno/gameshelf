@@ -10,77 +10,84 @@
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
 
-<div style="display: flex; justify-content: space-between;">
-{% comment %} タイトル {% endcomment %}
-    <h1 style="margin: 0;">{{ displaydiary.diary_title }}</h1>
+{% comment %} 工事領域 {% endcomment %}
+				<!-- Main -->
+					<div id="main">
+						<!-- Post -->
+							<article class="post">
+								<header>
+									<div class="title">
+										<h2>{{ displaydiary.diary_title }}</h2>
+									<ul class="stats">
+										<div class="icon solid fa-star" style="font-weight: bold; color: orange; font-size: 2em;">SCORE : {{ displaydiary.diary_rating }}</div>
+									</ul>
+										<ul class="tags-container">
+                                        <p><h3>タグ：</h3>
+                                        {% for tag in displaydiary.diary_tag.all %}
+                                            <li class="tag-item">
+                                            <a href="{% url 'tag_search' tag.id %}"><button>{{ tag }}</button></a>
+                                            </li>
+                                        {% endfor %}
+                                        </p>
+									</div>
+									<div class="meta">
+                                    <p class="author"><span style="font-weight: bold; font-size: 2em;">
+                                    執筆者:{{displaydiary.diary_user.nickname}}<img src="{{ MEDIA_URL }}{{ displaydiary.diary_user.userimage.url }}" alt=""/></p>
+                                    </span>
+                                    </div>
+								</header>
+                                    {% if displaymainimage.diary_image_image %}
+                                        <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
+                                    {%endif%}
 
-{% comment %} 編集ボタン {% endcomment %}
-    <form action="{% url 'editdiary' displaydiary.id %}" method="post" class="mt-3">
-        {% csrf_token %}
-        <button style="margin: 0;">日記編集</button>
-    </form>
-</div>
+                                <p>本文：{{ displaydiary.diary_content }}</p>
 
-{% comment %} タグ表示 {% endcomment %}
-<ul class="tags-container">
-<p>タグ：
-    {% for tag in displaydiary.diary_tag.all %}
-        <li class="tag-item">
-        <a href="{% url 'tag_search' tag.id %}"><button>{{ tag }}</button></a>
-        </li>
-    {% endfor %}</p></ul>
-
-
-
-{% comment %} メイン画像表示 {% endcomment %}
-{% if displaymainimage.diary_image_image %}
-    <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
-{%endif%}
-
-{% comment %} 日記詳細表示エリア {% endcomment %}
-
-<p>スコア：{{ displaydiary.diary_rating }}</p>
-
-<p>本文：{{ displaydiary.diary_content }}</p>
-
-<p>記事作成者:{{ displaydiary.diary_user }}</p>
-
+                                {% comment %} <footer>
+									<ul class="stats">
+										<div class="icon solid fa-star" style="font-weight: bold; color: orange; font-size: 2em;">SCORE : {{ displaydiary.diary_rating }}</div>
+									</ul>
+								</footer> {% endcomment %}
 {% comment %} 日記に紐づいた画像を表示 {% endcomment %}
-<hr>
-<p>画像</p>
+
 {% for image in displayimage %}
     <img src="{{ MEDIA_URL }}{{ image.diary_image_image.url }}" alt="◆◆◆">
     {% if image.diary_image_comment %}
         <p>{{ image.diary_image_comment }}</p>
     {%endif%}
-    <hr>
 {% endfor %}
 
-{% comment %} 日記への画像の追加 {% endcomment %}
-<form action="{% url 'addimagediary' displaydiary.id %}" method="post" class="mt-3">
+</article>
+</div>
+{% comment %} 工事領域 {% endcomment %}
+<div style="display: flex; justify-content: flex-end;">
+{% comment %} 編集ボタン {% endcomment %}
+<form action="{% url 'editdiary' displaydiary.id %}" method="post" class="mt-3" style="text-align: right;">
     {% csrf_token %}
-    <div style="text-align: right;">
-    <button>画像追加</button>
-    </div>
+    <button class="blue-button">日記編集</button>
 </form>
 
+{% comment %} 日記への画像の追加 {% endcomment %}
+<form action="{% url 'addimagediary' displaydiary.id %}" method="post" class="mt-3" style="text-align: right;">
+    {% csrf_token %}
+    <button class="green-button">画像追加</button>
+</form>
+</div>
 <hr>
+
+
+{% comment %} ゲーム画像が無い時の処理どうしてたっけ？検証からスタート {% endcomment %}
 
 {% comment %} ゲーム詳細表示エリア {% endcomment %}
 <h3>ゲームタイトル:{{ displaydiary.diary_game.game_title }}</h3>
-{% comment %} {% if displaydiary.diary_game.game_image %}
-<img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}">
-{% endif %}
-<a href="{% url 'game' displaydiary.diary_game.id %}"><button>ゲーム詳細</button></a> {% endcomment %}
-<a href="{% url 'game' displaydiary.diary_game.id %}" class="image featured"><img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}" style="object-fit: cover; height: 300px;"/></a>
-<hr>
-
+{% if displaydiary.diary_game.game_image %}
+<a href="{% url 'game' displaydiary.diary_game.id %}" class="image featured"><img src="{{ MEDIA_URL }}{{ displaydiary.diary_game.game_image.url }}" alt="{{ displaydiary.diary_game.game_title }}" style="object-fit: cover; height: 450px;"/></a>
+{%endif%}
 {% comment %} コメントエリア {% endcomment %}
 <form action="{% url 'diary' displaydiary.id %}" method="post" class="mt-3">
     {% csrf_token %}
     <label>コメント:</label>
     {{ commentform.as_p }}
-    <button>コメント投稿</button>
+    <button class="green-button">コメント投稿</button>
 </form>
 
 <hr>

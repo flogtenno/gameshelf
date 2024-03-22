@@ -1,7 +1,7 @@
 {% extends "top/layout.html" %}
 {% load static %}
 {% comment %} タイトルブロック部 {% endcomment %}
-{% block title %}[GameShelf]DiaryEdit{% endblock %}
+{% block title %}[GameShelf]EditDiary{% endblock %}
 
 {% comment %} ヘッダーブロック部 {% endcomment %}
 {% block header %}
@@ -10,18 +10,18 @@
 {% comment %} コンテンツブロック部 {% endcomment %}
 {% block content %}
 
-<h1>Fix Diary</h1>
+<h1>Edit Diary</h1>
 
 <form action="{% url 'save_editdiary' editdiary.id %}" method="post" class="mt-3" enctype="multipart/form-data">
     {% csrf_token %}
     {{ editform.as_p }}
-    <button>Fix Diary</button>
+    <button class="blue-button">編集を保存</button>
 </form>
 
 <form action="{% url 'deletediary' editdiary.id %}" method="post" class="mt-3">
     {% csrf_token %}
     <div style="text-align: right;">
-    <button class="btn btn-danger">日記削除</button>
+    <button class="red-button">日記削除</button>
     </div>
 </form>
 

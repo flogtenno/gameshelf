@@ -15,7 +15,7 @@
 <form action="{% url 'newdiary' game_id %}" method="post" class="mt-3" enctype="multipart/form-data">
     {% csrf_token %}
     {{ createform.as_p }}
-    <button>日記作成</button>
+    <button class="blue-button">日記作成</button>
 </form>
 
 {% endblock %}
