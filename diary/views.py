@@ -47,10 +47,10 @@ def newdiary(request, game_id):
             temp = form.save(commit=False) #保存先との関連付けを行う
             temp.diary_user = request.user
             temp.diary_game_id = game_id
-            temp.save()
+            temp.save() #作成ユーザー情報、関連ゲーム情報を合わせて保存　下の行だけでOK?冗長かも
             form.save_m2m() # 多対多の関係を持つタグの保存
             messages.success(request, "作成しました")
-            return redirect('diary', diary_id=temp.id) #diary = form.save()でdiaryに丸々保存内容が入っている、diary.idを指定して新規作成したページへ飛べる
+            return redirect('diary', diary_id=temp.id) #diary = temp.save()でtempに丸々保存内容が入っている、temp.idを指定して新規作成したページへ飛べる
     params = {
         "login_user"    :   request.user, #現在のログインユーザー情報（request.user）
         "createform"    :   DiaryCreateForm(),
@@ -89,7 +89,7 @@ def save_editdiary(request, diary_id):
 
 # 日記への画像追加~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def addimagediary(request, diary_id):
-    editdiary = Diary.objects.get(pk=diary_id)
+    editdiary = Diary.objects.get(pk=diary_id) #対象の日記をIDから取得
     image     = DiaryImage.objects.filter(diary_image_diary=editdiary) #diary_image_diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     if request.user.id == editdiary.diary_user_id: #編集リクエスト者と、記事作成者が同一かのチェック
         print("***ユーザー情報一致***")
@@ -149,7 +149,7 @@ def set_mainflag(request, diary_id, image_id):
         return redirect('addimagediary', diary_id=editdiary.id)
     return redirect('addimagediary', diary_id=editdiary.id)  # 成功時のリダイレクト先を指定
 
-# 日記の削除～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～deletediary
+# 日記の削除～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
 def deletediary(request, diary_id):
     editdiary = Diary.objects.get(pk=diary_id)
     if request.user.id == editdiary.diary_user_id: #削除リクエスト者と、記事作成者が同一かのチェック
