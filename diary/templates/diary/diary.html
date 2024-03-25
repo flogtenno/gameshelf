@@ -42,7 +42,7 @@
         <img src="{{ MEDIA_URL }}{{ displaymainimage.diary_image_image.url }}" alt="◆◆◆">
     {%endif%}
 
-    <p>本文：{{ displaydiary.diary_content }}</p>
+    <p>{{ displaydiary.diary_content }}</p>
 
     {% comment %} 日記に紐づいた画像を表示 {% endcomment %}
     {% for image in displayimage %}
